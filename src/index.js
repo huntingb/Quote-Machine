@@ -1,17 +1,60 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import logo from './images/tweet.png';
+import $ from 'jquery';
+
+class QuoteMachine extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      quotes: [],
+      quote: "",
+      author: ""
+    };
+    this.getNewQuote = this.getNewQuote.bind(this);
+  }
+
+  componentDidMount() {
+    const that = this;
+    const url = "https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json"
+    $.getJSON(url, function(data) {
+      const quotes = data.quotes;
+      const i = Math.floor(Math.random() * quotes.length);
+      that.setState({
+        "quotes": quotes,
+        "quote": quotes[i].quote,
+        "author": quotes[i].author
+      });
+    });
+  }
+
+  getNewQuote() {
+    const quotes = this.state.quotes;
+    const i = Math.floor(Math.random() * quotes.length);
+    this.setState({
+      "quote": quotes[i].quote,
+      "author": quotes[i].author
+    });
+  }
+
+  render() {
+    return (
+      <div id="quote-box">
+        {/* Should put a upside down quotation mark image here */}
+        <h1 id="text">{this.state.quote}</h1>
+        <h2 id="author">- {this.state.author}</h2>
+        <div id="buttons">
+          <button id="new-quote" onClick={this.getNewQuote}>new quote</button>
+          <a href="https://www.twitter.com/" id="tweet-quote"><img id="logo" src={logo} alt="tweet"/></a>
+        </div>
+      </div>
+    );
+  }
+}
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <QuoteMachine />,
   document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
