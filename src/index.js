@@ -13,6 +13,7 @@ class QuoteMachine extends React.Component {
       author: ""
     };
     this.getNewQuote = this.getNewQuote.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -29,6 +30,11 @@ class QuoteMachine extends React.Component {
     });
   }
 
+  handleClick() {
+    document.getElementById("quote-box").classList.add("transparent");
+    setTimeout(this.getNewQuote, 1010);
+  }
+
   getNewQuote() {
     const quotes = this.state.quotes;
     const i = Math.floor(Math.random() * quotes.length);
@@ -36,6 +42,7 @@ class QuoteMachine extends React.Component {
       "quote": quotes[i].quote,
       "author": quotes[i].author
     });
+    document.getElementById("quote-box").classList.remove("transparent");
   }
 
   render() {
@@ -45,8 +52,8 @@ class QuoteMachine extends React.Component {
         <h1 id="text">{this.state.quote}</h1>
         <h2 id="author">- {this.state.author}</h2>
         <div id="buttons">
-          <button id="new-quote" onClick={this.getNewQuote}>new quote</button>
-          <a href="https://www.twitter.com/" id="tweet-quote"><img id="logo" src={logo} alt="tweet"/></a>
+          <button id="new-quote" onClick={this.handleClick}>new quote</button>
+          <a href={`https://www.twitter.com/intent/tweet?text="${this.state.quote}" -${this.state.author}`} id="tweet-quote"><img id="logo" src={logo} alt="tweet"/></a>
         </div>
       </div>
     );
